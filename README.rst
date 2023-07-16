@@ -16,28 +16,48 @@ Features
 - Persistence: ⚠️🚧🏗️ (In Progress)
 - Error Handling: ⚠️🚧🏗️ (In Progress)
 
-.. Installation
-.. ------------
-.. 1. Clone the repository:
-..
-..   ::
-..
-..       git clone https://github.com/username/MovieRecommendationSystem.git
-..
-.. 2. Set up a MySQL database and update the database configuration in `application.properties`:
-..
-..   ::
-..
-..       spring.datasource.url=jdbc:mysql://localhost:3306/movierecommendationsystem
-..       spring.datasource.username=your-username
-..       spring.datasource.password=your-password
-..
-.. 3. Build and run the application using Maven:
-..
-..   ::
-..
-..       cd MovieRecommendationSystem
-..       mvn spring-boot:run
+ Installation
+ ------------
+ 1. Clone the repository:
+
+   ::
+
+       git clone https://github.com/username/MovieRecommendationSystem.git
+
+ 2. Set up a MySQL database and update the database configuration in `application.properties`:
+
+
+    a. Go to MySQL Command Line Client and enter the following commands:
+
+       :: sql
+
+            CREATE DATABASE movie_recommendation;
+            USE movie_recommendation;
+
+            CREATE TABLE User(
+               id INT AUTO_INCREMENT,
+               name VARCHAR(100),
+               email VARCHAR(100) UNIQUE,
+               password VARCHAR(100),
+               PRIMARY KEY(id)
+            );
+
+
+    b. Update the database configuration in `application.properties`:
+
+        :: shell
+
+            spring.datasource.url=jdbc:mysql://localhost:3306/movi e_recommendation
+            spring.datasource.username=root
+            spring.datasource.password=yourpassword
+            spring.jpa.hibernate.ddl-auto=update
+
+ 3. Build and run the application using Maven:
+
+   ::
+
+       cd MovieRecommendationSystem
+       mvn spring-boot:run
 
 
 .. Usage
