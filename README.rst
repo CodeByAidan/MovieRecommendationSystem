@@ -1,9 +1,6 @@
 ⚠️🚧🏗️ Movie Recommendation System (In Progress) ⚠️🚧🏗️
 ==========================
 
-.. image:: https://example.com/images/movie-recommendation-system.png
-   :alt: Movie Recommendation System
-
 Movie Recommendation System is a Java-based project developed using Spring Boot and MySQL. It provides a platform for users to register, rate movies, and receive personalized movie recommendations based on their preferences and ratings.
 
 Features
