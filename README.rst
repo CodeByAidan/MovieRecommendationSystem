@@ -1,5 +1,6 @@
-Movie Recommendation System |warning|
-=====================================
+#######################################
+ Movie Recommendation System |warning|
+#######################################
 
 |CodeQL Workflow Status|
 
