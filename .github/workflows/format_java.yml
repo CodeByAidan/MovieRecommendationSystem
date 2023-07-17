@@ -11,18 +11,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Cache Prettier
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-prettier-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-prettier-
+      - name: Configure Git user
+        run: |
+          git config user.name "Java Formatter - Livxy"
+          git config user.email "<>"
 
       - name: Install Prettier
-        run: |
-          npm install -g prettier@2.6.2
-          npm i -g prettier-plugin-java@1.6.1
+        run: npm i -g prettier@2.6.2
 
       - name: Run Prettier
         run: prettier -w **/*.java
@@ -30,8 +25,6 @@ jobs:
       - name: Commit changes
         if: ${{ env.commit }} == 'true'
         run: |
-          git config user.name "Java Formatter - Livxy"
-          git config user.email "<>"
           git diff-index --quiet HEAD
           if [ $? -ne 0 ]; then
             git add .
@@ -39,4 +32,3 @@ jobs:
             git push
           else
             echo 'Nothing to commit!'
-          fi
