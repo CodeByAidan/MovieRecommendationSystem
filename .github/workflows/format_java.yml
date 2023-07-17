@@ -20,9 +20,7 @@ jobs:
             ${{ runner.os }}-prettier-
 
       - name: Install Prettier
-        run: npm ci -g prettier@2.6.2
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: npm install -g prettier@2.6.2
 
       - name: Run Prettier
         run: prettier -w **/*.java
