@@ -1,0 +1,12 @@
+name: Format
+
+on:
+  push
+
+jobs:
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: tsar-boomba/prettier-java-action@v1.0.0
