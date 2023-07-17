@@ -16,23 +16,11 @@ jobs:
           npm i -g prettier@2.6.2
           npm i -g prettier-plugin-java@1.6.1
 
-      - name: Debug mode
-        id: debug-check
-        run: |
-          echo "::set-output name=debug::$(echo ${{ github.event_name }} == 'workflow_run' && ${{ github.event.workflow_run.event == 'push' }} && ${{ github.event.workflow_run.pull_requests == null }} && ${{ github.event.workflow_run.pull_request == null }})"
-
-      - name: Save unformatted Java file
-        if: steps.debug-check.outputs.debug == 'true'
-        run: |
-          echo ${{ unformattedJava }} > Java.java
-
       - name: Run Prettier
-        run: |
-          prettier ${{ env.args }} "${{ env.files }}"
-          echo $?
+        run: prettier -w **/*.java
 
       - name: Commit changes
-        if: steps.debug-check.outputs.debug == 'true' && steps.run-prettier.outcome == 'success' && ${{ env.commit }} == 'true'
+        if: ${{ env.commit }} == 'true'
         run: |
           git config user.name github-actions
           git config user.email ''
