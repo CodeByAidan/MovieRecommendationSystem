@@ -6,16 +6,16 @@ Movie Recommendation System is a Java-based project developed using `Spring Boot
 Features
 --------
 
-- User Registration: |warning| (In Progress)
-- Movie Database: |warning| (In Progress)
-- Rating System: |warning| (In Progress)
-- Recommendation Algorithm: |warning| (In Progress)
-- User Interface: |warning| (In Progress)
-- Search Functionality: |warning| (In Progress)
-- Top Rated Movies: |warning| (In Progress)
-- User Profile: |warning| (In Progress)
-- Persistence: |warning| (In Progress)
-- Error Handling: |warning| (In Progress)
+- User Registration: |warning|
+- Movie Database: |warning|
+- Rating System: |warning|
+- Recommendation Algorithm: |warning|
+- User Interface: |warning|
+- Search Functionality: |warning|
+- Top Rated Movies: |warning|
+- User Profile: |warning|
+- Persistence: |warning|
+- Error Handling: |warning|
 
 .. |warning| image:: https://img.shields.io/badge/Status-In%20Progress-yellow
    :target: https://img.shields.io/badge/Status-In%20Progress-yellow
