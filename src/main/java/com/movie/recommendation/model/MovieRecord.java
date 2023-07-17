@@ -1,4 +1,3 @@
 package com.movie.recommendation.model;
 
-public class MovieRecord {
-}
+public class MovieRecord {}

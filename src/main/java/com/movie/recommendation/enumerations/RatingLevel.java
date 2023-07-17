@@ -1,4 +1,3 @@
 package com.movie.recommendation.enumerations;
 
-public enum RatingLevel {
-}
+public enum RatingLevel {}

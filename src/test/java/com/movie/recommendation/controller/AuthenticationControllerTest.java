@@ -1,4 +1,3 @@
 package com.movie.recommendation.controller;
 
-public class AuthenticationControllerTest {
-}
+public class AuthenticationControllerTest {}

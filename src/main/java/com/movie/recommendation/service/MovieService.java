@@ -1,4 +1,3 @@
 package com.movie.recommendation.service;
 
-public interface MovieService {
-}
+public interface MovieService {}

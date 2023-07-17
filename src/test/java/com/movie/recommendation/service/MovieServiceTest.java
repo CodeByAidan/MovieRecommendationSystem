@@ -1,4 +1,3 @@
 package com.movie.recommendation.service;
 
-public class MovieServiceTest {
-}
+public class MovieServiceTest {}

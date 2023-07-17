@@ -1,4 +1,3 @@
 package com.movie.recommendation.repository;
 
-public interface RatingRepository {
-}
+public interface RatingRepository {}
