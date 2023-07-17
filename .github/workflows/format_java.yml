@@ -11,10 +11,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache Prettier
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-prettier-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
+
       - name: Install Prettier
-        run: |
-          npm i -g prettier@2.6.2
-          npm i -g prettier-plugin-java@1.6.1
+        run: npm i -g prettier@2.6.2
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Run Prettier
         run: prettier -w **/*.java
