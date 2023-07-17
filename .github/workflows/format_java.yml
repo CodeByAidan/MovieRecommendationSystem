@@ -30,7 +30,7 @@ jobs:
       - name: Commit changes
         if: ${{ env.commit }} == 'true'
         run: |
-          git config user.name "🍵"
+          git config user.name "Java Formatter - Livxy"
           git config user.email "<>"
           git diff-index --quiet HEAD
           if [ $? -ne 0 ]; then
