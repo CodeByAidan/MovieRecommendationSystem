@@ -67,9 +67,9 @@ Installation
 
       .. code-block:: properties
 
-             spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it)
+             spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
              spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
-             spring.datasource.password=yourpassword  # Enter your MySQL password here that you use when logging in to MySQL Command Line Client
+             spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
              spring.jpa.hibernate.ddl-auto=update
 
 
