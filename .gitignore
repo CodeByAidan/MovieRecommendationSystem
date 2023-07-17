@@ -56,3 +56,6 @@ build/
 # Eclipse specific
 .settings/
 bin/
+
+# Application Properties
+src/main/resources/application.properties
