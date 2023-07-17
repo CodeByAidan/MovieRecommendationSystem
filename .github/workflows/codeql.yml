@@ -60,6 +60,20 @@ jobs:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
+    - name: Download and Set up CodeQL tools
+      id: download-codeql
+      run: |
+        echo "Downloading CodeQL tools..."
+        mkdir -p $HOME/codeql
+        curl -L https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.14.0/codeql-bundle-linux64.tar.gz -o $HOME/codeql/codeql-bundle-linux64.tar.gz
+        tar xzf $HOME/codeql/codeql-bundle-linux64.tar.gz -C $HOME/codeql --strip-components=1
+
+    - name: Cache CodeQL tools
+      uses: actions/cache@v2
+      with:
+        path: $HOME/codeql
+        key: ${{ runner.os }}-codeql-${{ hashFiles('**/codeql-bundle-*.tar.gz') }}
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
@@ -77,13 +91,6 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
-
-    - name: Cache CodeQL tools
-      id: cache-codeql
-      uses: actions/cache@v2
-      with:
-        path: ${{ runner.temp }}/codeql
-        key: ${{ runner.os }}-codeql-${{ hashFiles('**/codeql-bundle-*.tar.gz') }}
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
