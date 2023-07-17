@@ -20,9 +20,9 @@ jobs:
             ${{ runner.os }}-prettier-
 
       - name: Install Prettier
-        run: npm i -g prettier@2.6.2
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          npm install -g prettier@2.6.2
+          npm i -g prettier-plugin-java@1.6.1
 
       - name: Run Prettier
         run: prettier -w **/*.java
@@ -30,11 +30,11 @@ jobs:
       - name: Commit changes
         if: ${{ env.commit }} == 'true'
         run: |
-          git config user.name github-actions
+          git config user.name "🖥️"
           git config user.email ''
           git diff-index --quiet HEAD
           if [ $? -ne 0 ]; then
-            git commit --all -m "${{ env.commitMessage }}"
+            git commit --all -m "Apply java formatting"
             git push
           else
             echo 'Nothing to commit!'
