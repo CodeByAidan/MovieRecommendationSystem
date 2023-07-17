@@ -1,6 +1,14 @@
 Movie Recommendation System |warning|
 =====================================
 
+|CodeQL Workflow Status|
+
+.. |CodeQL Workflow Status| image:: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml/badge.svg
+   :target: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml
+
+
+
+
 **Note: This project is currently a work in progress and is not yet ready for production use. It is being actively developed and may undergo significant changes. Contributions and suggestions are welcome!**
 
 
