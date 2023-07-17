@@ -1,7 +1,10 @@
 Movie Recommendation System |warning|
 =====================================
-Movie Recommendation System is a Java-based project developed using `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1) and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a platform for users to register, rate movies, and receive personalized movie recommendations based on their preferences and ratings.
 
+**Note: This project is currently a work in progress and is not yet ready for production use. It is being actively developed and may undergo significant changes. Contributions and suggestions are welcome!**
+
+
+Movie Recommendation System is a Java-based project developed using `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1) and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a platform for users to register, rate movies, and receive personalized movie recommendations based on their preferences and ratings.
 
 Features
 --------
