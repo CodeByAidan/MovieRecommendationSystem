@@ -1,3 +1,5 @@
 package com.movie.recommendation.util;
 
-public class RecommendationAlgorithmTest {}
+public class RecommendationAlgorithmTest {
+  
+}
