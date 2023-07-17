@@ -90,7 +90,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/ql-cache
-        key: ${{ runner.os }}-codeql-analysis-${{ hashFiles('codeql-analysis.yml') }}
+        key: ${{ runner.os }}-codeql-analysis-${{ hashFiles('**/codeql-analysis.yml') }}
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
