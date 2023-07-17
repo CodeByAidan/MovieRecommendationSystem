@@ -20,7 +20,9 @@ jobs:
             ${{ runner.os }}-prettier-
 
       - name: Install Prettier
-        run: npm install -g prettier@2.6.2
+        run: |
+          npm install -g prettier@2.6.2
+          npm i -g prettier-plugin-java@1.6.1
 
       - name: Run Prettier
         run: prettier -w **/*.java
