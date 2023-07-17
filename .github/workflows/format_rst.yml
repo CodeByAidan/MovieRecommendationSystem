@@ -92,7 +92,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.name "GitHub Actions"
+          git config user.name "😏"
           git config user.email "<>"
           if [[ -n $(git status -s) ]]; then
             git add .
