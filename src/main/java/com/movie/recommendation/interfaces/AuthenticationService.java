@@ -1,3 +1,4 @@
 package com.movie.recommendation.interfaces;
 
-public interface AuthenticationService {}
+public interface AuthenticationService {
+}

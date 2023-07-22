@@ -1,18 +1,17 @@
 package com.movie.recommendation.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
+
 
 @Entity
-@Table(name = "movie_records")
-public class MovieRecord {
+@Table(name = "tags")
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime timestamp;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -20,18 +19,27 @@ public class MovieRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
-    public MovieRecord() {
+    public Tag() {
     }
 
-    public MovieRecord(LocalDateTime timestamp, User user, Movie movie) {
-        this.timestamp = timestamp;
+    public Tag(String name) {
+        this.name = name;
+    }
+
+    public Tag(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Tag(Long id, String name, User user, Movie movie) {
+        this.id = id;
+        this.name = name;
         this.user = user;
         this.movie = movie;
     }
 
-    public MovieRecord(Long id, LocalDateTime timestamp, User user, Movie movie) {
-        this.id = id;
-        this.timestamp = timestamp;
+    public Tag(String name, User user, Movie movie) {
+        this.name = name;
         this.user = user;
         this.movie = movie;
     }
@@ -40,8 +48,8 @@ public class MovieRecord {
         return id;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getName() {
+        return name;
     }
 
     public User getUser() {
@@ -56,8 +64,8 @@ public class MovieRecord {
         this.id = id;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setName(String name) {
+        this.name= name;
     }
 
     public void setUser(User user) {
@@ -70,9 +78,9 @@ public class MovieRecord {
 
     @Override
     public String toString() {
-        return "MovieRecord{" +
+        return "Tag{" +
                 "id=" + id +
-                ", timestamp='" + timestamp + '\'' +
+                ", name='" + name + '\'' +
                 ", user=" + user +
                 ", movie=" + movie +
                 '}';
@@ -81,16 +89,12 @@ public class MovieRecord {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MovieRecord)) return false;
-        MovieRecord that = (MovieRecord) o;
-        return id.equals(that.id) &&
-                timestamp.equals(that.timestamp) &&
-                user.equals(that.user) &&
-                movie.equals(that.movie);
+        if (!(o instanceof Tag )) return false;
+        return id != null && id.equals(((Tag) o).getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, timestamp, user, movie);
+        return 31;
     }
 }

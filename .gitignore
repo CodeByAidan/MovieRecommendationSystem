@@ -59,3 +59,6 @@ bin/
 
 # Application Properties
 src/main/resources/application.properties
+
+# Data (for now, trust)
+src/main/resources/data/

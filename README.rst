@@ -1,132 +1,105 @@
-#######################################
- Movie Recommendation System |warning|
-#######################################
+Movie Recommendation System |warning|
+=====================================
 
 |CodeQL Workflow Status|
 
 .. |CodeQL Workflow Status| image:: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml/badge.svg
    :target: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml
 
-**Note: This project is currently a work in progress and is not yet
-ready for production use. It is being actively developed and may undergo
-significant changes. Contributions and suggestions are welcome!**
+**Note: This project is currently a work in progress and is not yet ready for production use. It is being actively developed and may undergo significant changes. Contributions and suggestions are welcome!**
 
-Movie Recommendation System is a Java-based project developed using
-`Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1)
-and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a
-platform for users to register, rate movies, and receive personalized
-movie recommendations based on their preferences and ratings.
 
-**********
- Features
-**********
+Movie Recommendation System is a Java-based project developed using `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1) and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a platform for users to register, rate movies, and receive personalized movie recommendations based on their preferences and ratings.
 
--  User Registration: |warning|
--  Movie Database: |warning|
--  Rating System: |warning|
--  Recommendation Algorithm: |warning|
--  User Interface: |warning|
--  Search Functionality: |warning|
--  Top Rated Movies: |warning|
--  User Profile: |warning|
--  Persistence: |warning|
--  Error Handling: |warning|
+Features
+--------
+
+- User Registration: |warning|
+- Movie Database: |warning|
+- Rating System: |warning|
+- Recommendation Algorithm: |warning|
+- User Interface: |warning|
+- Search Functionality: |warning|
+- Top Rated Movies: |warning|
+- User Profile: |warning|
+- Persistence: |warning|
+- Error Handling: |warning|
 
 .. |warning| image:: https://img.shields.io/badge/Status-In%20Progress-yellow
    :target: https://img.shields.io/badge/Status-In%20Progress-yellow
 
-**************
- Installation
-**************
 
-#. Clone the repository:
+Installation
+------------
 
-.. code:: bash
+1. Clone the repository:
+
+.. code-block:: bash
 
    git clone https://github.com/username/MovieRecommendationSystem.git
 
-2. Download `Docker Desktop <https://www.docker.com/>`_ and MySQL 8.0
-   (use `MySQL Installer <https://dev.mysql.com/downloads/installer/>`_)
-   and run the following commands:
+2. Download `Docker Desktop <https://www.docker.com/>`_ and MySQL 8.0 (use `MySQL Installer <https://dev.mysql.com/downloads/installer/>`_) and run the following commands:
 
-   #. Configure the MySQL container in `docker-compose.yml
-      </docker-compose.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD``
-      value to whatever password you want to use when logging in to
-      MySQL Command Line Client/MySQL Workbench):
+   #. Configure the MySQL container in `docker-compose.yml </docker-compose.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD`` value to whatever password you want to use when logging in to MySQL Command Line Client/MySQL Workbench):
 
-      .. code:: yaml
+      .. code-block:: yaml
 
-         version: '3.8'
-         services:
-           db:
-             image: 'mysql:8.0'
-             cap_add:
-               - SYS_NICE
-             restart: always
-             environment:
-               - MYSQL_DATABASE=movie_recommendation
-               - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
-             ports:
-               - '3308:3306'
+             version: '3.8'
+             services:
+               db:
+                 image: 'mysql:8.0'
+                 cap_add:
+                   - SYS_NICE
+                 restart: always
+                 environment:
+                   - MYSQL_DATABASE=movie_recommendation
+                   - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
+                 ports:
+                   - '3308:3306'
+                 volumes:
+                   - 'db:/var/lib/mysql'
+                   - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
              volumes:
-               - 'db:/var/lib/mysql'
-               - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
-         volumes:
-           db:
-             driver: local
+               db:
+                 driver: local
 
-   #. Open a terminal, and the Docker Desktop application, and run the
-      following command to start a MySQL container:
+   #. Open a terminal, and the Docker Desktop application, and run the following command to start a MySQL container:
 
-      .. code:: bash
 
-         cd /path/to/MovieRecommendationSystem
-         docker-compose -f docker-compose.yml up -d
+      .. code-block:: bash
 
-   *(side note: if you want to stop the docker at any time through your
-   terminal, type:* ``docker-compose -f docker-compose.yml down`` *)*
+             cd /path/to/MovieRecommendationSystem
+             docker-compose -f docker-compose.yml up
 
-   |br|
+   #. Update the database configuration in ``application.properties``:
 
-   3. Update the database configuration in ``application.properties``:
+      .. code-block:: properties
 
-   .. code:: properties
+             spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
+             spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
+             spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
+             spring.jpa.hibernate.ddl-auto=update
 
-      spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
-      spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
-      spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
-      spring.jpa.hibernate.ddl-auto=update
 
-#. Build and run the application using Maven:
+3. Build and run the application using Maven:
 
-   .. code:: bash
+   .. code-block:: bash
 
-      cd MovieRecommendationSystem
-      mvn spring-boot:run
+       cd MovieRecommendationSystem
+       mvn spring-boot:run
 
-.. |br| raw:: html
 
-   <br/>
+Contributing
+------------
+Contributions are welcome ❤️! If you find any issues or have suggestions for improvements, please feel free to submit a pull request.
 
-**************
- Contributing
-**************
+License
+-------
+This project is licensed under the MIT License. See the `LICENSE </LICENSE>`_ file for more information.
 
-Contributions are welcome ❤️! If you find any issues or have suggestions
-for improvements, please feel free to submit a pull request.
+Contact
+-------
+For any inquiries or support, please reach out to me on Discord: `bruhs. <https://discordapp.com/users/300291395883892737>`_
 
-*********
- License
-*********
+.. _`bruhs. <https://discordapp.com/users/300291395883892737>`: https://discordapp.com/users/300291395883892737
 
-This project is licensed under the MIT License. See the `LICENSE
-</LICENSE>`_ file for more information.
-
-*********
- Contact
-*********
-
-For any inquiries or support, please reach out to me on Discord: `bruhs.
-<https://discordapp.com/users/300291395883892737>`_
-
-.. _bruhs. <https://discordapp.com/users/300291395883892737>: https://discordapp.com/users/300291395883892737
