@@ -1,33 +1,43 @@
-name: Format
+name: Format Java files
 
 on:
-  push
+  push:
+    branches:
+      - main
+
 
 jobs:
   formatting:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2 # v2 minimum required
+      - uses: tsar-boomba/prettier-java-action@v1.0.0
 
-      - name: Install Prettier
-        run: |
-          npm i -g prettier@2.6.2
-          npm i -g prettier-plugin-java@1.6.1
+# jobs:
+#   formatting:
+#     runs-on: ubuntu-latest
 
-      - name: Run Prettier
-        run: prettier -w **/*.java
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Commit changes
-        if: ${{ env.commit }} == 'true'
-        run: |
-          git config user.name github-actions
-          git config user.email ''
-          git diff-index --quiet HEAD
-          if [ $? -ne 0 ]; then
-            git commit --all -m "${{ env.commitMessage }}"
-            git push
-          else
-            echo 'Nothing to commit!'
-          fi
+#       - name: Install Prettier
+#         run: |
+#           npm i -g prettier@2.6.2
+#           npm i -g prettier-plugin-java@1.6.1
+
+#       - name: Run Prettier
+#         run: prettier -w **/*.java
+
+#       - name: Commit changes
+#         if: ${{ env.commit }} == 'true'
+#         run: |
+#           git config user.name github-actions
+#           git config user.email ''
+#           git diff-index --quiet HEAD
+#           if [ $? -ne 0 ]; then
+#             git commit --all -m "${{ env.commitMessage }}"
+#             git push
+#           else
+#             echo 'Nothing to commit!'
+#           fi
