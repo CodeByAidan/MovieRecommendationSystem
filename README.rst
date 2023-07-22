@@ -81,7 +81,34 @@ Installation
              spring.jpa.hibernate.ddl-auto=update
 
 
-3. Build and run the application using Maven:
+4. Install maven dependencies:
+
+   .. code-block:: bash
+
+       cd MovieRecommendationSystem
+       mvn install
+
+5. Download MovieLens Dataset and Extract Data:
+
+   1. Make sure you have Git Bash installed on your system. If you are using Windows, open Git Bash for the following steps.
+
+   2. Open your terminal or Git Bash and navigate to the root directory of your ``MovieRecommendationSystem`` project.
+
+   3. Copy and paste the following one-liner command into your terminal or Git Bash:
+
+      .. code-block:: bash
+
+             if [ ! -d "src/main/resources/data/ml-25m" ]; then curl -O https://files.grouplens.org/datasets/movielens/ml-25m.zip && unzip ml-25m.zip -d src/main/resources/data/ && rm ml-25m.zip; fi
+
+
+   (Note: If you're on Windows and don't have Git Bash, you can download it from the official website: https://git-scm.com/downloads )
+
+   4. Press Enter to execute the command. The script will download the zip file containing the MovieLens dataset and extract its contents to ``src/main/resources/data/ml-25m/``.
+
+   5. After the command completes, the zip file will be removed, and you should see the MovieLens dataset files in the ``src/main/resources/data/ml-25m/`` directory of your project.
+
+
+6. Build and run the application using Maven:
 
    .. code-block:: bash
 
@@ -103,3 +130,6 @@ For any inquiries or support, please reach out to me on Discord: `bruhs. <https:
 
 .. _`bruhs. <https://discordapp.com/users/300291395883892737>`: https://discordapp.com/users/300291395883892737
 
+.. |nl| raw:: html
+
+   <br />
