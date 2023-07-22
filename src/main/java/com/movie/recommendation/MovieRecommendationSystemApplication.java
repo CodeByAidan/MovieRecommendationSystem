@@ -10,29 +10,31 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @ComponentScan(
-        {
-                "com.movie.recommendation.service",
-                "com.movie.recommendation.repository",
-                "com.movie.recommendation.controller",
-                "com.movie.recommendation.model",
-        }
+  {
+    "com.movie.recommendation.service",
+    "com.movie.recommendation.repository",
+    "com.movie.recommendation.controller",
+    "com.movie.recommendation.model",
+  }
 )
 @SpringBootApplication
 public class MovieRecommendationSystemApplication {
 
-    @Bean
-    public CommandLineRunner loadData(DataLoaderService dataLoaderService) {
-        return (args) -> {
-            dataLoaderService.loadMoviesData();
-        };
-    }
+  @Bean
+  public CommandLineRunner loadData(DataLoaderService dataLoaderService) {
+    return args -> {
+      dataLoaderService.loadMoviesData();
+    };
+  }
 
-    public static void main(String[] args) {
-        ApplicationContext applicationContext =
-                SpringApplication.run(MovieRecommendationSystemApplication.class, args);
+  public static void main(String[] args) {
+    ApplicationContext applicationContext = SpringApplication.run(
+      MovieRecommendationSystemApplication.class,
+      args
+    );
 
-        for (String name : applicationContext.getBeanDefinitionNames()) {
-            System.out.println(name);
-        }
+    for (String name : applicationContext.getBeanDefinitionNames()) {
+      System.out.println(name);
     }
+  }
 }
