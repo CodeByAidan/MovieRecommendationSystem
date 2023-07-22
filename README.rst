@@ -1,134 +1,159 @@
-Movie Recommendation System |warning|
-=====================================
+#######################################
+ Movie Recommendation System |warning|
+#######################################
 
 |CodeQL Workflow Status|
 
 .. |CodeQL Workflow Status| image:: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml/badge.svg
    :target: https://github.com/livxy/MovieRecommendationSystem/actions/workflows/codeql.yml
 
-**Note: This project is currently a work in progress and is not yet ready for production use. It is being actively developed and may undergo significant changes. Contributions and suggestions are welcome!**
+**Note: This project is currently a work in progress and is not yet
+ready for production use. It is being actively developed and may undergo
+significant changes. Contributions and suggestions are welcome!**
 
+Movie Recommendation System is a Java-based project developed using
+`Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1)
+and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a
+platform for users to register, rate movies, and receive personalized
+movie recommendations based on their preferences and ratings.
 
-Movie Recommendation System is a Java-based project developed using `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1) and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a platform for users to register, rate movies, and receive personalized movie recommendations based on their preferences and ratings.
+**********
+ Features
+**********
 
-Features
---------
-
-- User Registration: |warning|
-- Movie Database: |warning|
-- Rating System: |warning|
-- Recommendation Algorithm: |warning|
-- User Interface: |warning|
-- Search Functionality: |warning|
-- Top Rated Movies: |warning|
-- User Profile: |warning|
-- Persistence: |warning|
-- Error Handling: |warning|
+-  User Registration: |warning|
+-  Movie Database: |warning|
+-  Rating System: |warning|
+-  Recommendation Algorithm: |warning|
+-  User Interface: |warning|
+-  Search Functionality: |warning|
+-  Top Rated Movies: |warning|
+-  User Profile: |warning|
+-  Persistence: |warning|
+-  Error Handling: |warning|
 
 .. |warning| image:: https://img.shields.io/badge/Status-In%20Progress-yellow
    :target: https://img.shields.io/badge/Status-In%20Progress-yellow
 
+**************
+ Installation
+**************
 
-Installation
-------------
+#. Clone the repository:
 
-1. Clone the repository:
-
-.. code-block:: bash
+.. code:: bash
 
    git clone https://github.com/username/MovieRecommendationSystem.git
 
-2. Download `Docker Desktop <https://www.docker.com/>`_ and MySQL 8.0 (use `MySQL Installer <https://dev.mysql.com/downloads/installer/>`_) and run the following commands:
+2. Download `Docker Desktop <https://www.docker.com/>`_ and MySQL 8.0
+   (use `MySQL Installer <https://dev.mysql.com/downloads/installer/>`_)
+   and run the following commands:
 
-   #. Configure the MySQL container in `docker-compose.yml </docker-compose.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD`` value to whatever password you want to use when logging in to MySQL Command Line Client/MySQL Workbench):
+   #. Configure the MySQL container in `docker-compose.yml
+      </docker-compose.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD``
+      value to whatever password you want to use when logging in to
+      MySQL Command Line Client/MySQL Workbench):
 
-      .. code-block:: yaml
+      .. code:: yaml
 
-             version: '3.8'
-             services:
-               db:
-                 image: 'mysql:8.0'
-                 cap_add:
-                   - SYS_NICE
-                 restart: always
-                 environment:
-                   - MYSQL_DATABASE=movie_recommendation
-                   - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
-                 ports:
-                   - '3308:3306'
-                 volumes:
-                   - 'db:/var/lib/mysql'
-                   - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
+         version: '3.8'
+         services:
+           db:
+             image: 'mysql:8.0'
+             cap_add:
+               - SYS_NICE
+             restart: always
+             environment:
+               - MYSQL_DATABASE=movie_recommendation
+               - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
+             ports:
+               - '3308:3306'
              volumes:
-               db:
-                 driver: local
+               - 'db:/var/lib/mysql'
+               - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
+         volumes:
+           db:
+             driver: local
 
-   #. Open a terminal, and the Docker Desktop application, and run the following command to start a MySQL container:
+   #. Open a terminal, and the Docker Desktop application, and run the
+      following command to start a MySQL container:
 
+      .. code:: bash
 
-      .. code-block:: bash
-
-             cd /path/to/MovieRecommendationSystem
-             docker-compose -f docker-compose.yml up
+         cd /path/to/MovieRecommendationSystem
+         docker-compose -f docker-compose.yml up
 
    #. Update the database configuration in ``application.properties``:
 
-      .. code-block:: properties
+      .. code:: properties
 
-             spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
-             spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
-             spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
-             spring.jpa.hibernate.ddl-auto=update
-
+         spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
+         spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
+         spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
+         spring.jpa.hibernate.ddl-auto=update
 
 4. Install maven dependencies:
 
-   .. code-block:: bash
+   .. code:: bash
 
-       cd MovieRecommendationSystem
-       mvn install
+      cd MovieRecommendationSystem
+      mvn install
 
-5. Download MovieLens Dataset and Extract Data:
+#. Download MovieLens Dataset and Extract Data:
 
-   1. Make sure you have Git Bash installed on your system. If you are using Windows, open Git Bash for the following steps.
+   #. Make sure you have Git Bash installed on your system. If you are
+      using Windows, open Git Bash for the following steps.
 
-   2. Open your terminal or Git Bash and navigate to the root directory of your ``MovieRecommendationSystem`` project.
+   #. Open your terminal or Git Bash and navigate to the root directory
+      of your ``MovieRecommendationSystem`` project.
 
-   3. Copy and paste the following one-liner command into your terminal or Git Bash:
+   #. Copy and paste the following one-liner command into your terminal
+      or Git Bash:
 
-      .. code-block:: bash
+      .. code:: bash
 
-             if [ ! -d "src/main/resources/data/ml-25m" ]; then curl -O https://files.grouplens.org/datasets/movielens/ml-25m.zip && unzip ml-25m.zip -d src/main/resources/data/ && rm ml-25m.zip; fi
+         if [ ! -d "src/main/resources/data/ml-25m" ]; then curl -O https://files.grouplens.org/datasets/movielens/ml-25m.zip && unzip ml-25m.zip -d src/main/resources/data/ && rm ml-25m.zip; fi
 
+   (Note: If you're on Windows and don't have Git Bash, you can download
+   it from the official website: https://git-scm.com/downloads )
 
-   (Note: If you're on Windows and don't have Git Bash, you can download it from the official website: https://git-scm.com/downloads )
+   4. Press Enter to execute the command. The script will download the
+      zip file containing the MovieLens dataset and extract its contents
+      to ``src/main/resources/data/ml-25m/``.
 
-   4. Press Enter to execute the command. The script will download the zip file containing the MovieLens dataset and extract its contents to ``src/main/resources/data/ml-25m/``.
+   #. After the command completes, the zip file will be removed, and you
+      should see the MovieLens dataset files in the
+      ``src/main/resources/data/ml-25m/`` directory of your project.
 
-   5. After the command completes, the zip file will be removed, and you should see the MovieLens dataset files in the ``src/main/resources/data/ml-25m/`` directory of your project.
+#. Build and run the application using Maven:
 
+   .. code:: bash
 
-6. Build and run the application using Maven:
+      cd MovieRecommendationSystem
+      mvn spring-boot:run
 
-   .. code-block:: bash
+**************
+ Contributing
+**************
 
-       cd MovieRecommendationSystem
-       mvn spring-boot:run
+Contributions are welcome ❤️! If you find any issues or have suggestions
+for improvements, please feel free to submit a pull request.
 
+*********
+ License
+*********
 
-Contributing
-------------
-Contributions are welcome ❤️! If you find any issues or have suggestions for improvements, please feel free to submit a pull request.
+This project is licensed under the MIT License. See the `LICENSE
+</LICENSE>`_ file for more information.
 
-License
--------
-This project is licensed under the MIT License. See the `LICENSE </LICENSE>`_ file for more information.
+*********
+ Contact
+*********
 
-Contact
--------
-For any inquiries or support, please reach out to me on Discord: `bruhs. <https://discordapp.com/users/300291395883892737>`_
+For any inquiries or support, please reach out to me on Discord: `bruhs.
+<https://discordapp.com/users/300291395883892737>`_
 
-.. _`bruhs. <https://discordapp.com/users/300291395883892737>`: https://discordapp.com/users/300291395883892737
+.. _bruhs. <https://discordapp.com/users/300291395883892737>: https://discordapp.com/users/300291395883892737
 
 .. |nl| raw:: html
 
