@@ -132,9 +132,9 @@ movie recommendations based on their preferences and ratings.
       cd MovieRecommendationSystem
       mvn spring-boot:run
 
-**************
- Contributing
-**************
+
+Contributing
+============
 
 Contributions are welcome ❤️! If you find any issues or have suggestions
 for improvements, please feel free to submit a pull request.
