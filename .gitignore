@@ -38,11 +38,11 @@ build/
 # Compiled files
 *.class
 
-# Dependency directories
-/src/main/java/com/movie/recommendation/repository/
-/src/main/java/com/movie/recommendation/service/
-/src/test/java/com/movie/recommendation/controller/
-/src/test/java/com/movie/recommendation/service/
+# Dependency directories tf?
+#/src/main/java/com/movie/recommendation/repository/
+#/src/main/java/com/movie/recommendation/service/
+#/src/test/java/com/movie/recommendation/controller/
+#/src/test/java/com/movie/recommendation/service/
 
 # Log files
 /logs/
