@@ -132,7 +132,6 @@ movie recommendations based on their preferences and ratings.
       cd MovieRecommendationSystem
       mvn spring-boot:run
 
-
 Contributing
 ============
 
