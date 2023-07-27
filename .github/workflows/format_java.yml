@@ -9,15 +9,13 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Configure Git user name
-        run: git config user.name "📚"
+      - uses: actions/checkout@v3
 
       - name: Format Java code with Prettier
-        uses: tsar-boomba/prettier-java-action@v1.0.0
+        uses: tsar-boomba/prettier-java-action@main
         with:
           prettier-args: "--write"
           files: "**/*.java"
-          commit-message: "Apply Java formatting"
           commit: true
+          github-username: '📚'
+          commit-message: "Apply Java formatting"
