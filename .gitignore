@@ -39,7 +39,7 @@ build/
 *.class
 
 # Dependency directories tf?
-#/src/main/java/com/movie/recommendation/repository/
+#/src/main/java/com/movie/recommendation/repo/
 #/src/main/java/com/movie/recommendation/service/
 #/src/test/java/com/movie/recommendation/controller/
 #/src/test/java/com/movie/recommendation/service/

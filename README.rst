@@ -11,8 +11,11 @@
 ready for production use. It is being actively developed and may undergo
 significant changes. Contributions and suggestions are welcome!**
 
+**IMPORTANT: This is in Java 11, so make sure you have `Java 11 <https://www.oracle.com/java/technologies/downloads/#java11>`_
+installed on your system.**
+
 Movie Recommendation System is a Java-based project developed using
-`Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 3.1.1)
+`Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 2.3.4)
 and `MySQL <https://www.mysql.com/>`_ (version: 8.0). It provides a
 platform for users to register, rate movies, and receive personalized
 movie recommendations based on their preferences and ratings.
@@ -49,31 +52,31 @@ movie recommendations based on their preferences and ratings.
    (use `MySQL Installer <https://dev.mysql.com/downloads/installer/>`_)
    and run the following commands:
 
-   #. Configure the MySQL container in `docker-compose.yml
-      </docker-compose.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD``
+   #. Configure the MySQL container in `docker-compose-mysql.yml
+      </docker-compose-mysql.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD``
       value to whatever password you want to use when logging in to
       MySQL Command Line Client/MySQL Workbench):
 
       .. code:: yaml
 
          version: '3.8'
+
          services:
-           db:
-             image: 'mysql:8.0'
-             cap_add:
-               - SYS_NICE
+           localmysql:
+             container_name: db
              restart: always
+             image: 'mysql:8.0'
              environment:
                - MYSQL_DATABASE=movie_recommendation
                - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
+
              ports:
                - '3308:3306'
-             volumes:
-               - 'db:/var/lib/mysql'
-               - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
+         #    volumes:
+         #      - 'db:/var/lib/mysql'
+         #      - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
          volumes:
-           db:
-             driver: local
+           mysqldata:
 
    #. Open a terminal, and the Docker Desktop application, and run the
       following command to start a MySQL container:
@@ -81,16 +84,31 @@ movie recommendations based on their preferences and ratings.
       .. code:: bash
 
          cd /path/to/MovieRecommendationSystem
-         docker-compose -f docker-compose.yml up
+         docker-compose -f docker-compose-mysql.yml up
 
-   #. Update the database configuration in ``application.properties``:
+   #. Update the database configuration in ``src/main/resources/application-default.properties``:
 
       .. code:: properties
 
-         spring.datasource.url=jdbc:mysql://localhost:3308/movie_recommendation # Enter your MySQL database URL here (default is "localhost:3308" if you haven't changed it).
-         spring.datasource.username=root  # This should be root if you are using the Docker, so no need to change.
-         spring.datasource.password=yourpassword  # Enter your MySQL password here that you used for MYSQL_ROOT_PASSWORD in the docker-compose.yml file.
-         spring.jpa.hibernate.ddl-auto=update
+         spring:
+           datasource:
+             url: jdbc:mysql://127.0.0.1:3308/movie_recommendation
+             username: root # Change this to your own username
+             password: yourpassword # Change this to your own password
+           jpa:
+             hibernate:
+               ddl-auto: update
+           lifecycle:
+             timeout-per-shutdown-phase: 20s
+
+         logging:
+           level:
+             com.movie.recommendation: debug
+
+
+         server:
+           port: 8080
+           shutdown: graceful
 
 4. Install maven dependencies:
 

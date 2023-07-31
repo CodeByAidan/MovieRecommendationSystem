@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3308/movie_recommendation
+    username: root # Change this to your own username
+    password: yourpassword # Change this to your own password
+  jpa:
+    hibernate:
+      ddl-auto: update
+#  lifecycle:
+#    timeout-per-shutdown-phase: 20s
+#
+#logging:
+#  level:
+#    com.movie.recommendation: debug
+
+
+server:
+  port: 8080
+  shutdown: graceful

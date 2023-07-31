@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  localmysql:
+    container_name: db
+    restart: always
+    image: 'mysql'
+    environment:
+      MYSQL_DATABASE: 'movie_recommendation'
+      MYSQL_ROOT_PASSWORD: yourpassword # Change this to your own password
+
+    ports:
+      - 3308:3306
+#    volumes:
+#      - 'db:/var/lib/mysql'
+##      - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
+#volumes:
+#  mysqldata:

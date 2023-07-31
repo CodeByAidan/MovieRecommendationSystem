@@ -1,28 +1,32 @@
 package com.movie.recommendation.controller;
 
 import com.movie.recommendation.model.Movie;
-import com.movie.recommendation.repository.MovieRepository;
-import com.movie.recommendation.service.MovieService;
-import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import com.movie.recommendation.repo.MovieRepository;
 
-@RestController
-@RequestMapping("/api/movies")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ResourceBundle;
+
+@Controller()
 public class MovieController {
 
-  private final MovieService movieService;
+    @Autowired private MovieRepository movieRepository;
 
-  public MovieController(MovieService movieService) {
-    this.movieService = movieService;
-  }
+    @GetMapping(path = "/all", produces = "application/json")
+    public @ResponseBody Iterable<Movie> getAllMovies() {
+        return movieRepository.findAll();
+    }
 
-  @GetMapping
-  public List<Movie> getAllMovies() {
-    return movieService.getAllMovies();
-  }
+    @PostMapping(path = "/setmovie", produces = "application/json")
+    public ResponseEntity<HttpStatus> saveMovie(Movie movie) {
+        movieRepository.save(movie);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
-  @PostMapping
-  public Movie addMovie(@RequestBody Movie movie) {
-    return movieService.save(movie);
-  }
 }

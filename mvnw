@@ -161,7 +161,7 @@ find_maven_basedir() {
 concat_lines() {
   if [ -f "$1" ]; then
     # Remove \r in case we run on Windows within Git Bash
-    # and check out the repository with auto CRLF management
+    # and check out the repo with auto CRLF management
     # enabled. Otherwise, we may read lines that are delimited with
     # \r\n and produce $'-Xarg\r' rather than -Xarg due to word
     # splitting rules.
