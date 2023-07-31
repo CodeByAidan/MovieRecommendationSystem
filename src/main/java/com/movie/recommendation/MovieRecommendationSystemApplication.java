@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@EnableAsync
 public class MovieRecommendationSystemApplication {
 
   private static final Logger logger = LoggerFactory.getLogger(MovieRecommendationSystemApplication.class);

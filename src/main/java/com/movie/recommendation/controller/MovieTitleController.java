@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class MovieTitleController {
@@ -36,11 +33,11 @@ public class MovieTitleController {
 
 
     @PostMapping(path="/loadtitle", produces = "application/json")
-    public CompletableFuture<ResponseEntity<HttpStatus>> loadMovieTitles() throws IOException {
+    public ResponseEntity<HttpStatus> loadMovieTitles() throws IOException {
         logger.info("-------> Loading movie titles...");
-        List<MovieTitle> titles = movieTitleService.getTitlesAsync().join();
+        List<MovieTitle> titles = movieTitleService.getTitles();
         movieTitleRepository.saveAll(titles);
-        return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(path="/settitle", produces = "application/json")
