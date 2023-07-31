@@ -79,7 +79,6 @@ movie recommendations based on their preferences and ratings.
          #volumes:
          #  mysqldata:
 
-
    #. Open a terminal, and the Docker Desktop application, and run the
       following command to start a MySQL container:
 
@@ -118,7 +117,6 @@ movie recommendations based on their preferences and ratings.
          server:
            port: 8080
            shutdown: graceful
-
 
 4. Install maven dependencies:
 
