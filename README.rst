@@ -11,8 +11,9 @@
 ready for production use. It is being actively developed and may undergo
 significant changes. Contributions and suggestions are welcome!**
 
-**IMPORTANT: This is in Java 11, so make sure you have `Java 11 <https://www.oracle.com/java/technologies/downloads/#java11>`_
-installed on your system.**
+**IMPORTANT: This is in Java 11, so make sure you have `Java 11
+<https://www.oracle.com/java/technologies/downloads/#java11>`_ installed
+on your system.**
 
 Movie Recommendation System is a Java-based project developed using
 `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 2.3.4)
@@ -53,9 +54,9 @@ movie recommendations based on their preferences and ratings.
    and run the following commands:
 
    #. Configure the MySQL container in `docker-compose-mysql.yml
-      </docker-compose-mysql.yml>`_ (change out the ``MYSQL_ROOT_PASSWORD``
-      value to whatever password you want to use when logging in to
-      MySQL Command Line Client/MySQL Workbench):
+      </docker-compose-mysql.yml>`_ (change out the
+      ``MYSQL_ROOT_PASSWORD`` value to whatever password you want to use
+      when logging in to MySQL Command Line Client/MySQL Workbench):
 
       .. code:: yaml
 
@@ -86,7 +87,8 @@ movie recommendations based on their preferences and ratings.
          cd /path/to/MovieRecommendationSystem
          docker-compose -f docker-compose-mysql.yml up
 
-   #. Update the database configuration in ``src/main/resources/application-default.properties``:
+   #. Update the database configuration in
+      ``src/main/resources/application-default.properties``:
 
       .. code:: properties
 
