@@ -11,9 +11,9 @@
 ready for production use. It is being actively developed and may undergo
 significant changes. Contributions and suggestions are welcome!**
 
-**IMPORTANT: This is in Java 11, so make sure you have `Java 11
-<https://www.oracle.com/java/technologies/downloads/#java11>`_ installed
-on your system.**
+**IMPORTANT: This is in Java 11, so make sure you have** `Java 11
+<https://www.oracle.com/java/technologies/downloads/#java11>`_  **installed**
+**on your system.**
 
 Movie Recommendation System is a Java-based project developed using
 `Spring Boot <https://spring.io/projects/spring-boot>`_ (version: 2.3.4)
