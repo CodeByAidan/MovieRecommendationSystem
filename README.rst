@@ -66,18 +66,19 @@ movie recommendations based on their preferences and ratings.
            localmysql:
              container_name: db
              restart: always
-             image: 'mysql:8.0'
+             image: 'mysql'
              environment:
-               - MYSQL_DATABASE=movie_recommendation
-               - MYSQL_ROOT_PASSWORD=yourpassword # Change this to your own password
+               MYSQL_DATABASE: 'movie_recommendation'
+               MYSQL_ROOT_PASSWORD: yourpassword # Change this to your own password
 
              ports:
-               - '3308:3306'
+               - 3308:3306
          #    volumes:
          #      - 'db:/var/lib/mysql'
-         #      - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
-         volumes:
-           mysqldata:
+         ##      - './db/init.sql:/docker-entrypoint-initdb.d/init.sql'
+         #volumes:
+         #  mysqldata:
+
 
    #. Open a terminal, and the Docker Desktop application, and run the
       following command to start a MySQL container:
@@ -93,6 +94,12 @@ movie recommendations based on their preferences and ratings.
       .. code:: properties
 
          spring:
+           task:
+             execution:
+               pool:
+                 core-size: 10
+                 max-size: 20
+                 queue-capacity: 50
            datasource:
              url: jdbc:mysql://127.0.0.1:3308/movie_recommendation
              username: root # Change this to your own username
@@ -100,17 +107,18 @@ movie recommendations based on their preferences and ratings.
            jpa:
              hibernate:
                ddl-auto: update
-           lifecycle:
-             timeout-per-shutdown-phase: 20s
-
-         logging:
-           level:
-             com.movie.recommendation: debug
+         #  lifecycle:
+         #    timeout-per-shutdown-phase: 20s
+         #
+         #logging:
+         #  level:
+         #    com.movie.recommendation: debug
 
 
          server:
            port: 8080
            shutdown: graceful
+
 
 4. Install maven dependencies:
 
