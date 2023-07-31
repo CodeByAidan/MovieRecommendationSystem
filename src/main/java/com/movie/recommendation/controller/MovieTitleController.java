@@ -9,14 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,11 +33,11 @@ public class MovieTitleController {
         this.movieTitleService = movieTitleService;
     }
 
-
+    @Async
     @PostMapping(path="/loadtitle", produces = "application/json")
     public CompletableFuture<ResponseEntity<HttpStatus>> loadMovieTitles() throws IOException {
         logger.info("-------> Loading movie titles...");
-        List<MovieTitle> titles = movieTitleService.getTitlesAsync().join();
+        List<MovieTitle> titles = movieTitleService.getTitles();
         movieTitleRepository.saveAll(titles);
         return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED));
     }
