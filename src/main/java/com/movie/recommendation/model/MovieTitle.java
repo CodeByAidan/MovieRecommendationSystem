@@ -17,6 +17,8 @@ import javax.persistence.Id;
 public class MovieTitle {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)  Long id;
     private String title;
+    private String genre;
+    private long movieId;
 
     public MovieTitle(String title) {
         setTitle(title);

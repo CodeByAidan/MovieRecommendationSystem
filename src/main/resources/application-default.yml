@@ -1,4 +1,10 @@
 spring:
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 50
   datasource:
     url: jdbc:mysql://127.0.0.1:3308/movie_recommendation
     username: root # Change this to your own username

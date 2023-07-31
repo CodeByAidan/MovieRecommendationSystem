@@ -1,56 +1,77 @@
 package com.movie.recommendation.service;
 
 import com.movie.recommendation.model.MovieTitle;
-
+import com.movie.recommendation.repo.MovieTitleRepository;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.QuoteMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class MovieTitleService {
 
     private static final Logger logger = LoggerFactory.getLogger(MovieTitleService.class);
-    private static final String MOVIES_FILE_PATH = "src/main/resources/data/ml-25m/movies.csv";
 
-    public List<MovieTitle> getTitles() throws FileNotFoundException {
-        File file = new File(MOVIES_FILE_PATH);
+    private final MovieTitleRepository movieTitleRepository;
+
+    @Autowired
+    public MovieTitleService(MovieTitleRepository movieTitleRepository) {
+        this.movieTitleRepository = movieTitleRepository;
+    }
+
+    @Async
+    public CompletableFuture<List<MovieTitle>> getTitlesAsync() throws IOException {
+        List<MovieTitle> titles = getTitles();
+        return CompletableFuture.completedFuture(titles);
+    }
+
+    public List<MovieTitle> getTitles() throws IOException {
         List<MovieTitle> titles = new ArrayList<>();
+        ClassPathResource resource = new ClassPathResource("data/ml-25m/movies.csv");
+        Reader reader = new InputStreamReader(resource.getInputStream());
 
-        try (Scanner scanner = new Scanner(file)) {
-            String headerLine = scanner.nextLine();
-            String[] headerParts = headerLine.split(",");
-            int titleIndex = -1;
-            for (int i = 0; i < headerParts.length; i++) {
-                if (headerParts[i].equals("title")) {
-                    titleIndex = i;
-                    break;
-                }
-            }
-            if (titleIndex == -1) {
-                throw new RuntimeException("Title column not found in the CSV file.");
-            }
+        CSVFormat csvFormat = CSVFormat.Builder.create()
+                        .setHeader()
+                        .setSkipHeaderRecord(true)
+                        .setQuoteMode(QuoteMode.ALL_NON_NULL)
+                        .build();
 
-            while (scanner.hasNextLine()) {
-                String[] parts = scanner.nextLine().split(",");
-                if (parts.length > titleIndex) {
-                    String titleName = parts[titleIndex].trim();
-                    titles.add(new MovieTitle(titleName));
-                }
+        try (CSVParser parser = new CSVParser(reader, csvFormat)) {
+            for (CSVRecord record : parser) {
+                String movieId = record.get("movieId");
+                String title = record.get("title");
+                String genres = record.get("genres");
+
+                MovieTitle movieTitle = new MovieTitle();
+                movieTitle.setMovieId(Integer.parseInt(movieId));
+                movieTitle.setTitle(title);
+                movieTitle.setGenre(genres);
+
+                titles.add(movieTitle);
+
+                logger.info("-------> Movie title: " + movieTitle.getTitle());
+                logger.info("-------> Movie genre: " + movieTitle.getGenre());
+                logger.info("-------> Movie id: " + movieTitle.getMovieId());
+
+                movieTitleRepository.save(movieTitle);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not found, did you download the data from https://grouplens.org/datasets/movielens/25m/ ?");
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error while reading file {}", file.getAbsolutePath(), e);
-            throw e;
+            e.printStackTrace();
         }
-
         return titles;
     }
 }
