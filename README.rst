@@ -85,7 +85,7 @@ movie recommendations based on their preferences and ratings.
       .. code:: bash
 
          cd /path/to/MovieRecommendationSystem
-         docker-compose -f docker-compose-mysql.yml up
+         docker-compose -f docker-compose-mysql.yml up -d
 
    #. Update the database configuration in
       ``src/main/resources/application-default.properties``:
