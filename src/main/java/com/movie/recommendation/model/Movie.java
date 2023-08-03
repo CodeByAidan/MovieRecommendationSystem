@@ -3,7 +3,6 @@ package com.movie.recommendation.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,14 +12,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Movie {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    @Setter
-    private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)  Long id;
     private String title;
     private String genre;
+    private long movieId;
 
-    public Movie(String  title, String genre) {
+    public Movie(String title, String genre, long movieId) {
         setTitle(title);
         setGenre(genre);
+        setMovieId(movieId);
     }
 }
