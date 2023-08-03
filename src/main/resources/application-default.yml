@@ -12,6 +12,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 5000
+#        generate_statistics: true
 #  lifecycle:
 #    timeout-per-shutdown-phase: 20s
 #
