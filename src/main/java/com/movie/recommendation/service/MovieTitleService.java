@@ -2,6 +2,7 @@ package com.movie.recommendation.service;
 
 import com.movie.recommendation.model.MovieTitle;
 import com.movie.recommendation.repo.MovieTitleRepository;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -9,13 +10,10 @@ import org.apache.commons.csv.QuoteMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -35,47 +33,44 @@ public class MovieTitleService {
         this.movieTitleRepository = movieTitleRepository;
     }
 
-    @Async
-    public CompletableFuture<List<MovieTitle>> getTitlesAsync() throws IOException {
+    @Async("customTaskExecutor")
+    public CompletableFuture<List<MovieTitle>> getTitlesAsync() {
         List<MovieTitle> titles = getTitles();
         return CompletableFuture.completedFuture(titles);
     }
 
-    @Transactional
-    @Cacheable("cacheTitles")
-    public List<MovieTitle> getTitles() throws IOException {
+    public List<MovieTitle> getTitles() {
         List<MovieTitle> titles = new ArrayList<>();
         ClassPathResource resource = new ClassPathResource("data/ml-25m/movies.csv");
-        Reader reader = new InputStreamReader(resource.getInputStream());
 
-        CSVFormat csvFormat = CSVFormat.Builder.create()
-                        .setHeader()
-                        .setSkipHeaderRecord(true)
-                        .setQuoteMode(QuoteMode.ALL_NON_NULL)
-                        .build();
+        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
+            CSVFormat csvFormat = CSVFormat.Builder.create()
+                    .setHeader()
+                    .setSkipHeaderRecord(true)
+                    .setQuoteMode(QuoteMode.ALL_NON_NULL)
+                    .build();
 
-        try (CSVParser parser = new CSVParser(reader, csvFormat)) {
-            for (CSVRecord record : parser) {
-                String movieId = record.get("movieId");
-                String title = record.get("title");
-                String genres = record.get("genres");
+            try (CSVParser parser = new CSVParser(reader, csvFormat)) {
+                for (CSVRecord csvRecord : parser) {
+                    String movieId = csvRecord.get("movieId");
+                    String title = csvRecord.get("title");
 
-                MovieTitle movieTitle = new MovieTitle();
-                movieTitle.setMovieId(Integer.parseInt(movieId));
-                movieTitle.setTitle(title);
-                movieTitle.setGenre(genres);
+                    MovieTitle movieTitle = new MovieTitle();
+                    movieTitle.setMovieId(Integer.parseInt(movieId));
+                    movieTitle.setTitle(title);
 
-                titles.add(movieTitle);
+                    titles.add(movieTitle);
 
-                logger.info("-------> Movie title: " + movieTitle.getTitle());
-                logger.info("-------> Movie genre: " + movieTitle.getGenre());
-                logger.info("-------> Movie id: " + movieTitle.getMovieId());
+                    logger.info("-------> Movie title: {}", title);
+                    logger.info("-------> Movie id: {}", movieId);
 
-                movieTitleRepository.save(movieTitle);
+                    movieTitleRepository.save(movieTitle);
+                }
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.info("-------> Movie titles loaded.");
         return titles;
     }
 }
