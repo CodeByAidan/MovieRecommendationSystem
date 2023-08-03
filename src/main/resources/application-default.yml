@@ -17,6 +17,9 @@ spring:
         jdbc:
           batch_size: 5000
 #        generate_statistics: true
+  mvc:
+    async:
+      request-timeout: -1
 #  lifecycle:
 #    timeout-per-shutdown-phase: 20s
 #
