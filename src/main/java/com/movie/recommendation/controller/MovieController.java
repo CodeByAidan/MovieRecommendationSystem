@@ -21,22 +21,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 @Controller
 public class MovieController {
-
-    private final MovieRepository movieRepository;
     private static final Logger logger = LoggerFactory.getLogger(MovieController.class);
+    private final MovieRepository movieRepository;
     private final MovieService movieService;
     private final Executor threadPoolExecutor;
 
     @Autowired
-    public MovieController(
-            MovieService movieService,
-            @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
-            MovieRepository movieRepository) {
+    public MovieController(MovieService movieService,
+                           @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
+                           MovieRepository movieRepository) {
         this.movieService = movieService;
         this.threadPoolExecutor = threadPoolExecutor;
         this.movieRepository = movieRepository;
@@ -45,6 +42,7 @@ public class MovieController {
     @Async("customTaskExecutor")
     @PostMapping(path = "/loadmovie", produces = "application/json")
     public CompletableFuture<ResponseEntity<HttpStatus>> loadMovies() {
+        // TODO: Extraordinary slow code
         logger.info("Loading movies...");
 
         CompletableFuture<ResponseEntity<HttpStatus>> futureResponse = new CompletableFuture<>();
@@ -55,22 +53,25 @@ public class MovieController {
                 movies -> {
                     saveMoviesInThreadPool(movies);
                     logger.info("Movies loaded successfully!");
-                    futureResponse.complete(ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED));
+                    futureResponse.complete(
+                            ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED));
                 });
 
         return futureResponse;
     }
 
     private void saveMoviesInThreadPool(List<Movie> movies) {
-        movies.forEach(
-                movie -> threadPoolExecutor.execute(
-                        () -> movieRepository.save(movie)));
+        movies.forEach(movie ->
+                threadPoolExecutor.execute(() ->
+                        movieRepository.save(movie)
+                )
+        );
     }
 
     @PostMapping(path = "/setMovie", produces = "application/json")
-    public @ResponseBody ResponseEntity<HttpStatus> setMovie(@RequestBody MovieDTO movieDTO) {
-        logger.info("Saving movie: " + movieDTO.getTitle());
-
+    @ResponseBody
+    public ResponseEntity<HttpStatus> setMovie(@RequestBody MovieDTO movieDTO) {
+        logger.info("Saving movie: {}", movieDTO.getTitle());
         Movie movie = new Movie(movieDTO.getTitle(), movieDTO.getGenre(), movieDTO.getMovieId());
         movieRepository.save(movie);
 
@@ -78,7 +79,8 @@ public class MovieController {
     }
 
     @GetMapping(path = "/getMovies", produces = "application/json")
-    public @ResponseBody Iterable<Movie> getAllMovies() {
+    @ResponseBody
+    public Iterable<Movie> getAllMovies() {
         logger.info("Retrieving all movies...");
         return movieRepository.findAll();
     }

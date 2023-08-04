@@ -158,6 +158,20 @@ movie recommendations based on their preferences and ratings.
       cd MovieRecommendationSystem
       mvn spring-boot:run
 
+#. Create an HTTPS request to any of the endpoints, for example, to load in the data from the MovieLens dataset, you can create a POST http://localhost:8080/loadDefaultMovies request using Postman, or commands like:
+
+   .. code:: bash
+
+      curl -X POST http://localhost:8080/loadDefaultMovies
+
+   Or on Windows:
+
+    .. code:: powershell
+
+      Invoke-WebRequest -Method POST -Uri http://localhost:8080/loadDefaultMovies
+
+
+
 Contributing
 ============
 

@@ -24,17 +24,15 @@ import java.util.concurrent.Executor;
 
 @Controller()
 public class MovieGenreController {
-
-    private final MovieGenreRepository movieGenreRepository;
     private static final Logger logger = LoggerFactory.getLogger(MovieGenreController.class);
+    private final MovieGenreRepository movieGenreRepository;
     private final MovieGenreService movieGenreService;
     private final Executor threadPoolExecutor;
 
     @Autowired
-    public MovieGenreController(
-            MovieGenreService movieGenreService,
-            @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
-            MovieGenreRepository movieGenreRepository) {
+    public MovieGenreController(MovieGenreService movieGenreService,
+                                @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
+                                MovieGenreRepository movieGenreRepository) {
         this.movieGenreService = movieGenreService;
         this.threadPoolExecutor = threadPoolExecutor;
         this.movieGenreRepository = movieGenreRepository;
@@ -49,6 +47,7 @@ public class MovieGenreController {
     @Async("customTaskExecutor")
     @PostMapping(path = "/loadgenre", produces = "application/json")
     public CompletableFuture<ResponseEntity<HttpStatus>> loadMovieGenres() {
+        // TODO: Extraordinary slow code
         logger.info("-------> Loading movie genres...");
 
         // Return a CompletableFuture with a "pending" response initially, which will be completed later.
@@ -61,7 +60,8 @@ public class MovieGenreController {
                 genres -> {
                     saveGenresInThreadPool(genres);
                     logger.info("-------> Movie genres saved successfully.");
-                    futureResponse.complete(ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED));
+                    futureResponse.complete(
+                            ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED));
                 });
 
         return futureResponse;
@@ -69,9 +69,11 @@ public class MovieGenreController {
 
     // Helper method to save movie genres in a thread pool
     private void saveGenresInThreadPool(List<MovieGenre> genres) {
-        genres.forEach(
-                genre -> threadPoolExecutor.execute(
-                        () -> movieGenreRepository.save(genre)));
+        genres.forEach(genre ->
+                threadPoolExecutor.execute(() ->
+                        movieGenreRepository.save(genre)
+                )
+        );
     }
 
     /**
@@ -83,12 +85,10 @@ public class MovieGenreController {
     @GetMapping(path="/setGenre", produces = "application/json")
     public ResponseEntity<HttpStatus> setGenre(MovieGenreDTO movieGenreDTO) {
         logger.info("-------> Setting movie genre...");
-
         MovieGenre movieGenre = new MovieGenre();
         movieGenre.setGenre(movieGenreDTO.getGenre());
         movieGenre.setMovieId(movieGenreDTO.getMovieId());
         movieGenreRepository.save(movieGenre);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -98,7 +98,8 @@ public class MovieGenreController {
      * @return A list of all movie genres.
      */
     @GetMapping(path="/getGenres", produces = "application/json")
-    public @ResponseBody Iterable<MovieGenre> getAllGenres() {
+    @ResponseBody
+    public Iterable<MovieGenre> getAllGenres() {
         logger.info("-------> Retrieving all movie genres...");
         return movieGenreRepository.findAll();
     }

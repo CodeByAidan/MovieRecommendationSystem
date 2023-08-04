@@ -1,9 +1,6 @@
 package com.movie.recommendation.controller;
 
-import com.movie.recommendation.dto.MovieGenreDTO;
 import com.movie.recommendation.dto.MovieTitleDTO;
-import com.movie.recommendation.model.Movie;
-import com.movie.recommendation.model.MovieGenre;
 import com.movie.recommendation.model.MovieTitle;
 import com.movie.recommendation.repo.MovieTitleRepository;
 import com.movie.recommendation.service.MovieTitleService;
@@ -19,7 +16,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -28,17 +24,15 @@ import java.util.concurrent.Executor;
 
 @Controller
 public class MovieTitleController {
-
-    private final MovieTitleRepository movieTitleRepository;
     private static final Logger logger = LoggerFactory.getLogger(MovieTitleController.class);
+    private final MovieTitleRepository movieTitleRepository;
     private final MovieTitleService movieTitleService;
     private final Executor threadPoolExecutor;
 
     @Autowired
-    public MovieTitleController(
-            MovieTitleService movieTitleService,
-            @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
-            MovieTitleRepository movieTitleRepository) {
+    public MovieTitleController(MovieTitleService movieTitleService,
+                                @Qualifier("customTaskExecutor") ThreadPoolTaskExecutor threadPoolExecutor,
+                                MovieTitleRepository movieTitleRepository) {
         this.movieTitleService = movieTitleService;
         this.threadPoolExecutor = threadPoolExecutor;
         this.movieTitleRepository = movieTitleRepository;
@@ -53,6 +47,7 @@ public class MovieTitleController {
     @Async("customTaskExecutor")
     @PostMapping(path = "/loadtitle", produces = "application/json")
     public CompletableFuture<ResponseEntity<HttpStatus>> loadMovieTitles() {
+        // TODO: Extraordinary slow code
         logger.info("-------> Loading movie titles...");
 
         // Return a CompletableFuture with a "pending" response initially, which will be completed later.
@@ -73,9 +68,11 @@ public class MovieTitleController {
 
     // Helper method to save titles using the thread pool
     private void saveTitlesInThreadPool(List<MovieTitle> titles) {
-        titles.forEach(
-                title -> threadPoolExecutor.execute(
-                        () -> movieTitleRepository.save(title)));
+        titles.forEach(title ->
+                threadPoolExecutor.execute(() ->
+                        movieTitleRepository.save(title)
+                )
+        );
     }
 
     /**
@@ -87,12 +84,10 @@ public class MovieTitleController {
     @GetMapping(path="/setTitle", produces = "application/json")
     public ResponseEntity<HttpStatus> setTitle(MovieTitleDTO movieTitleDTO) {
         logger.info("-------> Setting movie genre...");
-
         MovieTitle movieTitle = new MovieTitle();
         movieTitle.setTitle(movieTitleDTO.getTitle());
         movieTitle.setMovieId(movieTitleDTO.getMovieId());
         movieTitleRepository.save(movieTitle);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -102,7 +97,8 @@ public class MovieTitleController {
      * @return A list of all movie titles.
      */
     @GetMapping(path = "/getTitles", produces = "application/json")
-    public @ResponseBody Iterable<MovieTitle> getAllTitles() {
+    @ResponseBody
+    public Iterable<MovieTitle> getAllTitles() {
         logger.info("-------> Retrieving all movie titles...");
         return movieTitleRepository.findAll();
     }

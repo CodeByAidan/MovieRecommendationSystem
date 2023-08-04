@@ -26,12 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-class MovieServiceException extends RuntimeException {
-    public MovieServiceException(String message, Throwable cause) {
-        super(message, cause);
-    }
-}
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class MovieService {
@@ -39,6 +34,9 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieTitleRepository movieTitleRepository;
     private final MovieGenreRepository movieGenreRepository;
+
+    @Value("${movie.service.logging.enabled:true}")
+    private boolean loggingEnabled;
 
     @Autowired
     public MovieService(MovieRepository movieRepository,
@@ -65,42 +63,84 @@ public class MovieService {
         });
     }
 
+    private void logProgressInfo(int i, int batchSize, long start, int totalMovies) {
+        if (!loggingEnabled) {
+            int moviesLeft = totalMovies - i;
+            long millis = System.currentTimeMillis() - start;
+            String timeElapsed = formatMillis(millis);
+            String avgTimePer1000 = formatMillis(millis / (batchSize / 1000));
+            long millisLeft = (millis / (batchSize / 1000)) * (moviesLeft / 1000);
+            String estimatedTimeLeft = formatMillis(millisLeft);
+            int percent = (int) (i / (double) totalMovies * 100);
+            String bar = StringUtils.repeat("=", percent / 2) +
+                         StringUtils.repeat(" ", 50 - (percent / 2));
+
+            logger.info("Movies left: {}", moviesLeft);
+            logger.info("Time elapsed: {}", timeElapsed);
+            logger.info("Average time per 1000 movies: {}", avgTimePer1000);
+            logger.info("Estimated time left: {}", estimatedTimeLeft);
+            logger.info("\r[{}] {}%", bar, percent);
+        }
+    }
+
     private List<Movie> loadMovies() {
         List<Movie> movies = new ArrayList<>();
         ClassPathResource resource = new ClassPathResource("data/ml-25m/movies.csv");
 
         try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-            batchProccessor(movies, reader);
+            batchProcessor(movies, reader);
             long start = System.currentTimeMillis();
+            int batchSize = 1000;
 
-            for (int i = 0; i < movies.size(); i += 1000) {
-                List<Movie> subList = movies.subList(i, Math.min(i + 1000, movies.size()));
+            for (int i = 0; i < movies.size(); i += batchSize) {
+                List<Movie> subList = movies.subList(i, Math.min(i + batchSize, movies.size()));
                 movieRepository.saveAll(subList);
-
-                logger.info("Movies left: {}", (movies.size() - i));
-
-                long millis = System.currentTimeMillis() - start;
-                logger.info("Time elapsed: {}", formatMillis(millis));
-                logger.info("Average time per 1000 movies: {}", formatMillis(millis / ((i + 1000) / 1000)));
-
-                long millisLeft = (millis / ((i + 1000) / 1000)) * ((movies.size() - i) / 1000);
-                logger.info("Estimated time left: {}", formatMillis(millisLeft));
-
-                int percent = (int) ((i + 1000) / (double) movies.size() * 100);
-                String bar = StringUtils.repeat("=", percent / 2) + StringUtils.repeat(" ", 50 - (percent / 2));
-                logger.info("\r[{}] {}%", bar, percent);
+                logProgressInfo(i, batchSize, start, movies.size());
             }
 
             logger.info("Movies saved.");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MovieServiceException("Error processing movies", e);
         }
 
         logger.info("Movies loaded.");
         return movies;
     }
 
-    private void batchProccessor(List<Movie> movies, Reader reader) throws IOException {
+
+    private void saveToMovieTitleTable(List<Movie> movies) throws IOException {
+        ClassPathResource resource = new ClassPathResource("data/ml-25m/movies.csv");
+
+        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
+            batchProcessor(movies, reader);
+            long start = System.currentTimeMillis();
+            // TODO: test 2000 batch size
+            int batchSize = 2000;
+
+            for (int i = 0; i < movies.size(); i += batchSize) {
+                List<Movie> subList = movies.subList(i, Math.min(i + batchSize, movies.size()));
+                List<MovieTitle> movieTitles = new ArrayList<>();
+                List<MovieGenre> movieGenres = new ArrayList<>();
+
+                for (Movie movie : subList) {
+                    MovieTitle movieTitle = new MovieTitle(movie.getTitle(), movie.getMovieId());
+                    movieTitles.add(movieTitle);
+
+                    MovieGenre movieGenre = new MovieGenre(movie.getGenre(), movie.getMovieId());
+                    movieGenres.add(movieGenre);
+                }
+
+                movieTitleRepository.saveAll(movieTitles);
+                movieGenreRepository.saveAll(movieGenres);
+                logProgressInfo(i, batchSize, start, movies.size());
+            }
+
+        } catch (IOException e) {
+            throw new MovieServiceException("Error processing movie titles", e);
+        }
+    }
+
+    private void batchProcessor(List<Movie> movies, Reader reader) throws IOException {
         CSVFormat csvFormat = CSVFormat.Builder.create()
                 .setHeader()
                 .setSkipHeaderRecord(true)
@@ -117,53 +157,10 @@ public class MovieService {
                 movie.setMovieId(Long.parseLong(movieId));
                 movie.setTitle(title);
                 movie.setGenre(genres);
-
                 movies.add(movie);
             }
         }
-
         logger.info("Movies count: {}", movies.size());
-    }
-
-    private void saveToMovieTitleTable(List<Movie> movies) throws IOException {
-        ClassPathResource resource = new ClassPathResource("data/ml-25m/movies.csv");
-
-        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-            batchProccessor(movies, reader);
-            long start = System.currentTimeMillis();
-
-            for (int i = 0; i < movies.size(); i += 1000) {
-                List<Movie> subList = movies.subList(i, Math.min(i + 1000, movies.size()));
-                List<MovieTitle> movieTitles = new ArrayList<>();
-                List<MovieGenre> movieGenres = new ArrayList<>();
-
-                for (Movie movie : subList) {
-                    MovieTitle movieTitle = new MovieTitle(movie.getTitle(), movie.getMovieId());
-                    movieTitles.add(movieTitle);
-
-                    MovieGenre movieGenre = new MovieGenre(movie.getGenre(), movie.getMovieId());
-                    movieGenres.add(movieGenre);
-                }
-
-                movieTitleRepository.saveAll(movieTitles);
-                movieGenreRepository.saveAll(movieGenres);
-
-                logger.info("Movies left: {}", (movies.size() - i));
-                long millis = System.currentTimeMillis() - start;
-                logger.info("Time elapsed: {}", formatMillis(millis));
-                logger.info("Average time per 1000 movies: {}", formatMillis(millis / ((i + 2000) / 1000)));
-
-                long millisLeft = (millis / ((i + 2000) / 1000)) * ((movies.size() - i) / 1000);
-                logger.info("Estimated time left: {}", formatMillis(millisLeft));
-
-                int percent = (int) ((i + 2000) / (double) movies.size() * 100);
-                String bar = StringUtils.repeat("=", percent / 2) + StringUtils.repeat(" ", 50 - (percent / 2));
-                logger.info("\r[{}] {}%", bar, percent);
-            }
-            logger.info("Saved to the movie_title table.");
-        } catch (IOException e) {
-            throw new MovieServiceException("Error processing movie titles", e);
-        }
     }
 
     private String formatMillis(long millis) {
@@ -172,3 +169,4 @@ public class MovieService {
                 TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 }
+

@@ -23,9 +23,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class MovieTitleService {
-
     private static final Logger logger = LoggerFactory.getLogger(MovieTitleService.class);
-
     private final MovieTitleRepository movieTitleRepository;
 
     @Autowired
@@ -58,18 +56,16 @@ public class MovieTitleService {
                     MovieTitle movieTitle = new MovieTitle();
                     movieTitle.setMovieId(Integer.parseInt(movieId));
                     movieTitle.setTitle(title);
-
                     titles.add(movieTitle);
-
                     logger.info("-------> Movie title: {}", title);
                     logger.info("-------> Movie id: {}", movieId);
-
                     movieTitleRepository.save(movieTitle);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("-------> Error loading movie titles: {}", e.getMessage());
         }
+        
         logger.info("-------> Movie titles loaded.");
         return titles;
     }

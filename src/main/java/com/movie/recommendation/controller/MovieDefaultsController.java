@@ -18,15 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import javax.sql.DataSource;
 
 @Controller
 public class MovieDefaultsController {
-
     private static final Logger logger = LoggerFactory.getLogger(MovieDefaultsController.class);
-
     private final MovieController movieController;
     private final MovieRepository movieRepo;
     private final MovieTitleRepository movieTitleRepo;
@@ -51,7 +48,7 @@ public class MovieDefaultsController {
 
     @Async("customTaskExecutor")
     @PostMapping("/loadDefaultMovies")
-    public CompletableFuture<ResponseEntity<HttpStatus>> loadDefaultMovies() throws ExecutionException, InterruptedException {
+    public CompletableFuture<ResponseEntity<HttpStatus>> loadDefaultMovies() {
         logger.info("-------> Loading default movies...");
         logger.info("-------> Checking if default movies are already loaded...");
 
@@ -60,9 +57,9 @@ public class MovieDefaultsController {
         Long sqlMovieTitleCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM movie_title", Long.class);
         Long sqlMovieGenreCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM movie_genre", Long.class);
 
-        if (sqlMovieTitleCount != null && sqlMovieTitleCount == 62423 &&
-                sqlMovieGenreCount != null && sqlMovieGenreCount == 62423 &&
-                sqlMovieCount != null && sqlMovieCount == 62423) {
+        if (sqlMovieTitleCount != null && sqlMovieTitleCount == 62423L &&
+                sqlMovieGenreCount != null && sqlMovieGenreCount == 62423L &&
+                sqlMovieCount != null && sqlMovieCount == 62423L) {
             logger.info("-------> Your movie_titles and movie_genres tables are already loaded...");
             return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.OK));
         } else {
@@ -73,12 +70,14 @@ public class MovieDefaultsController {
             movieGenreRepo.deleteAll();
             movieController.loadMovies();
             logger.info("-------> Default movies loaded successfully...");
+            List<Movie> movies = movieRepo.findAll();
+
+            // TODO: how the hell do i get this under 60 seconds?
+            logger.info("-------> Retrieved all movies from movie repository. " +
+                    "Now adding movies to movie, movie_title, and movie_genre tables in the database...");
+            logger.info("-------> Please wait, this can take up to 60 minutes to complete...");
+            movieService.saveToMovieTitleTableAsync(movies);
+            return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED));
         }
-        List<Movie> movies = movieRepo.findAll();
-        logger.info("-------> Retrieved all movies from movie repository. " +
-                "Now adding movies to movie, movie_title, and movie_genre tables in the database...");
-        logger.info("-------> Please wait, this can take up to 60 minutes to complete...");
-        movieService.saveToMovieTitleTableAsync(movies);
-        return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED));
     }
 }

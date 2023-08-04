@@ -18,7 +18,6 @@ public class ThreadPoolCalculator {
         int corePoolSize = calculateCorePoolSize(availableCores);
         int maxPoolSize = calculateMaxPoolSize(availableCores);
         int queueCapacity = calculateQueueCapacity(availableCores, taskCount);
-
         logger.info("Optimal corePoolSize: {}", corePoolSize);
         logger.info("Optimal maxPoolSize: {}", maxPoolSize);
         logger.info("Optimal queueCapacity: {}", queueCapacity);
@@ -63,8 +62,7 @@ public class ThreadPoolCalculator {
      */
     static int calculateQueueCapacity(int availableCores, int taskCount) {
         double scalingFactor = 3.0; // Adjust this scaling factor as needed
-        double queueCapacity = (double) (taskCount) / availableCores * scalingFactor;
-
+        double queueCapacity = (double) taskCount / (double) availableCores * scalingFactor;
         return Math.max((int) queueCapacity, 1);
     }
 }

@@ -26,9 +26,7 @@ import javax.transaction.Transactional;
 
 @Service
 public class MovieGenreService {
-
     private static final Logger logger = LoggerFactory.getLogger(MovieGenreService.class);
-
     private final MovieGenreRepository movieGenreRepository;
 
     @Autowired
@@ -62,12 +60,9 @@ public class MovieGenreService {
                     MovieGenre movieGenre = new MovieGenre();
                     movieGenre.setMovieId(Integer.parseInt(movieId));
                     movieGenre.setGenre(genresString);
-
                     movieGenres.add(movieGenre);
-
                     logger.info("-------> Movie Genre: {}", genresString);
                     logger.info("-------> Movie ID: {}", movieId);
-
                     movieGenreRepository.save(movieGenre);
                 }
             }
