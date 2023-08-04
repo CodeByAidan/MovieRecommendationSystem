@@ -169,9 +169,9 @@ movie recommendations based on their preferences and ratings.
 
    Or on Windows:
 
-      .. code:: powershell
+   .. code:: powershell
 
-         Invoke-WebRequest -Method POST -Uri http://localhost:8080/loadDefaultMovies
+      Invoke-WebRequest -Method POST -Uri http://localhost:8080/loadDefaultMovies"
 
 Contributing
 ============
