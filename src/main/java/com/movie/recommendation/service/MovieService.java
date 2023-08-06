@@ -63,22 +63,22 @@ public class MovieService {
         });
     }
 
-    private void logProgressInfo(int i, int batchSize, long start, int totalMovies) {
-        if (!loggingEnabled) {
+    private void logProgressInfo(int i, long start, int totalMovies) {
+        if (loggingEnabled) {
+            long elapsedMillis = System.currentTimeMillis() - start;
             int moviesLeft = totalMovies - i;
-            long millis = System.currentTimeMillis() - start;
-            String timeElapsed = formatMillis(millis);
-            String avgTimePer1000 = formatMillis(millis / (batchSize / 1000));
-            long millisLeft = (millis / (batchSize / 1000)) * (moviesLeft / 1000);
+            String timeElapsed = formatMillis(elapsedMillis);
+            String avgTimePer1000 = formatMillis(elapsedMillis / (i / 1000 + 1));
+            long millisLeft = (elapsedMillis / (i / 1000 + 1)) * (moviesLeft / 1000);
             String estimatedTimeLeft = formatMillis(millisLeft);
             int percent = (int) (i / (double) totalMovies * 100);
             String bar = StringUtils.repeat("=", percent / 2) +
-                         StringUtils.repeat(" ", 50 - (percent / 2));
+                    StringUtils.repeat(" ", 50 - (percent / 2));
 
-            logger.info("Movies left: {}", moviesLeft);
-            logger.info("Time elapsed: {}", timeElapsed);
-            logger.info("Average time per 1000 movies: {}", avgTimePer1000);
-            logger.info("Estimated time left: {}", estimatedTimeLeft);
+            logger.info("movies left: {}", moviesLeft);
+            logger.info("time elapsed: {}", timeElapsed);
+            logger.info("average time per 1000 movies: {}", avgTimePer1000);
+            logger.info("estimated time left: {}", estimatedTimeLeft);
             logger.info("\r[{}] {}%", bar, percent);
         }
     }
@@ -95,7 +95,7 @@ public class MovieService {
             for (int i = 0; i < movies.size(); i += batchSize) {
                 List<Movie> subList = movies.subList(i, Math.min(i + batchSize, movies.size()));
                 movieRepository.saveAll(subList);
-                logProgressInfo(i, batchSize, start, movies.size());
+                logProgressInfo(i, start, movies.size());
             }
 
             logger.info("Movies saved.");
@@ -132,7 +132,7 @@ public class MovieService {
 
                 movieTitleRepository.saveAll(movieTitles);
                 movieGenreRepository.saveAll(movieGenres);
-                logProgressInfo(i, batchSize, start, movies.size());
+                logProgressInfo(i, start, movies.size());
             }
 
         } catch (IOException e) {

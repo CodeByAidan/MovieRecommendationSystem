@@ -75,7 +75,10 @@ public class MovieDefaultsController {
             // TODO: how the hell do i get this under 60 seconds?
             logger.info("-------> Retrieved all movies from movie repository. " +
                     "Now adding movies to movie, movie_title, and movie_genre tables in the database...");
+
+            logger.info("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             logger.info("-------> Please wait, this can take up to 60 minutes to complete...");
+
             movieService.saveToMovieTitleTableAsync(movies);
             return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED));
         }
