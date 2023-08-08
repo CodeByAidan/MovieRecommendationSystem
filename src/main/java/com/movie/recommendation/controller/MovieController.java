@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -83,5 +85,29 @@ public class MovieController {
     public Iterable<Movie> getAllMovies() {
         logger.info("Retrieving all movies...");
         return movieRepository.findAll();
+    }
+
+    @PostMapping(path = "/getMoviesByGenre", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Iterable<Movie>> getMoviesByGenre(@RequestBody MovieDTO movieDTO) {
+         movieDTO.setGenre("Action|Adventure|Animation|Children's|Comedy|Crime|Documentary|Drama|Fantasy|Film-Noir|Horror|Musical|Mystery|Romance|Sci-Fi|Thriller|War|Western|(no genres listed)");
+         List<String> genres = movieDTO.getGenres();
+         logger.info("Genres: {}", genres);
+         logger.info("Retrieving movies by genre...");
+         Iterable<Movie> movies = movieRepository.findAll();
+
+//         List<Movie> moviesByGenre = new ArrayList<>();
+        Set<Movie> uniqueMoviesByGenre = new HashSet<>();
+
+        for (Movie movie : movies) {
+             for (String genre : genres) {
+                 if (movie.getGenre().contains(genre)) {
+                     uniqueMoviesByGenre.add(movie);
+                     break;
+                 }
+             }
+         }
+
+        return ResponseEntity.status(HttpStatus.OK).body(uniqueMoviesByGenre);
     }
 }
