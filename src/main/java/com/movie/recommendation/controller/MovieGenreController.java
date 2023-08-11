@@ -16,6 +16,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -76,27 +77,16 @@ public class MovieGenreController {
         );
     }
 
-    /**
-     * Saves a movie genre.
-     *
-     * @param movieGenreDTO The movie genre DTO to save.
-     * @return HTTP status code 201 (Created) if the movie genre was saved successfully.
-     */
-    @GetMapping(path="/setGenre", produces = "application/json")
-    public ResponseEntity<HttpStatus> setGenre(MovieGenreDTO movieGenreDTO) {
+    @PostMapping(path="/setGenre", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> setGenre(@RequestBody MovieGenreDTO movieGenreDTO) {
         logger.info("-------> Setting movie genre...");
-        MovieGenre movieGenre = new MovieGenre();
-        movieGenre.setGenre(movieGenreDTO.getGenre());
-        movieGenre.setMovieId(movieGenreDTO.getMovieId());
+        MovieGenre movieGenre = new MovieGenre(movieGenreDTO.getGenre(), movieGenreDTO.getMovieId());
         movieGenreRepository.save(movieGenre);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED);
     }
 
-    /**
-     * Retrieves all movie genres.
-     *
-     * @return A list of all movie genres.
-     */
     @GetMapping(path="/getGenres", produces = "application/json")
     @ResponseBody
     public Iterable<MovieGenre> getAllGenres() {

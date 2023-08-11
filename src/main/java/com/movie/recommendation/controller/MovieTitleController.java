@@ -16,6 +16,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -75,27 +76,16 @@ public class MovieTitleController {
         );
     }
 
-    /**
-     * Saves a movie title.
-     *
-     * @param movieTitleDTO The movie title DTO to save.
-     * @return HTTP status code 201 (Created) if the movie title was saved successfully.
-     */
-    @GetMapping(path="/setTitle", produces = "application/json")
-    public ResponseEntity<HttpStatus> setTitle(MovieTitleDTO movieTitleDTO) {
-        logger.info("-------> Setting movie genre...");
-        MovieTitle movieTitle = new MovieTitle();
-        movieTitle.setTitle(movieTitleDTO.getTitle());
-        movieTitle.setMovieId(movieTitleDTO.getMovieId());
+    @PostMapping(path = "/setTitle", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> setTitle(@RequestBody MovieTitleDTO movieTitleDTO) {
+        logger.info("-------> Setting movie title...");
+        MovieTitle movieTitle = new MovieTitle(movieTitleDTO.getTitle(), movieTitleDTO.getMovieId());
         movieTitleRepository.save(movieTitle);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED);
     }
 
-    /**
-     * Retrieves all movie titles.
-     *
-     * @return A list of all movie titles.
-     */
     @GetMapping(path = "/getTitles", produces = "application/json")
     @ResponseBody
     public Iterable<MovieTitle> getAllTitles() {
