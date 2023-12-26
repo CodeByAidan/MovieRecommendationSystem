@@ -1,6 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
+  "extends": ["config:base"],
+  "platform": "github",
+  "automerge": true,
+  "ignoreTests": true,
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "bump", "digest"],
+      "platform": "github",
+      "automerge": true,
+      "ignoreTests": true,
+      "platformAutomerge": true,
+      "prHourlyLimit": 0,
+      "prConcurrentLimit": 0,
+      "prCreation": "immediate",
+      "commitMessagePrefix": "chore(deps): update dependency",
+      "commitMessageTopic": "",
+      "labels": ["dependencies"]
+    }
   ]
 }
