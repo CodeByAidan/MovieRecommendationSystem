@@ -186,15 +186,6 @@ for improvements, please feel free to submit a pull request.
 This project is licensed under the MIT License. See the `LICENSE
 </LICENSE>`_ file for more information.
 
-*********
- Contact
-*********
-
-For any inquiries or support, please reach out to me on Discord: `bruhs.
-<https://discordapp.com/users/300291395883892737>`_
-
-.. _bruhs. <https://discordapp.com/users/300291395883892737>: https://discordapp.com/users/300291395883892737
-
 .. |nl| raw:: html
 
    <br />
